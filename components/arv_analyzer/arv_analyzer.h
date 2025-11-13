@@ -1,9 +1,8 @@
 #include "esphome.h"
-#include "esphome/components/uart/uart.h"
 
-class ArvAnalyzer : public Component, public uart::UARTDevice {
+class ArvAnalyzer : public Component, public UARTDevice {
  public:
-  ArvAnalyzer(uart::UARTComponent *parent) : uart::UARTDevice(parent) {}
+  ArvAnalyzer(UARTComponent *parent) : UARTDevice(parent) {}
 
   void loop() override {
     static std::vector<uint8_t> packet;
