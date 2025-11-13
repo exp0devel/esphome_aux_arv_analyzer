@@ -1,6 +1,5 @@
 #include "esphome.h"
-#include "esphome/components/uart/uart.h"
-
+#include "uart.h" 
 class ArvAnalyzer : public Component, public uart::UARTDevice {
  public:
   ArvAnalyzer(uart::UARTComponent *parent) : uart::UARTDevice(parent) {}
@@ -13,10 +12,10 @@ class ArvAnalyzer : public Component, public uart::UARTDevice {
       uint8_t byte;
       read_byte(&byte);
       uint32_t delta = now - last_millis;
-      if (delta > 2 && !packet.empty()) {
+      if (delta > 2 && !packet.empty()) {  // Packet end (pause > 2ms)
         std::string hex = "";
+        char buf[4];
         for (uint8_t b : packet) {
-          char buf[4];
           sprintf(buf, "%02X ", b);
           hex += buf;
         }
