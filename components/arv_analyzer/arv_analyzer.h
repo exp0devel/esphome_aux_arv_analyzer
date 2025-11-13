@@ -1,8 +1,9 @@
 #include "esphome.h"
+#include "esphome/components/uart/uart.h"
 
-class ArvAnalyzer : public Component, public UARTDevice {
+class ArvAnalyzer : public Component, public uart::UARTDevice {
  public:
-  ArvAnalyzer(UARTComponent *parent) : UARTDevice(parent) {}
+  ArvAnalyzer(uart::UARTComponent *parent) : uart::UARTDevice(parent) {}
 
   void loop() override {
     static std::vector<uint8_t> packet;
@@ -12,9 +13,13 @@ class ArvAnalyzer : public Component, public UARTDevice {
       uint8_t byte;
       read_byte(&byte);
       uint32_t delta = now - last_millis;
-      if (delta > 2 && !packet.empty()) {  // Packet end (pause > 2ms)
+      if (delta > 2 && !packet.empty()) {
         std::string hex = "";
-        for (uint8_t b : packet) hex += String::format("%02X ", b);
+        for (uint8_t b : packet) {
+          char buf[4];
+          sprintf(buf, "%02X ", b);
+          hex += buf;
+        }
         ESP_LOGD("arv_analyzer", "Packet (delta %dms): %s", delta, hex.c_str());
         packet.clear();
       }
