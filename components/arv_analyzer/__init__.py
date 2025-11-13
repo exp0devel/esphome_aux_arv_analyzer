@@ -1,0 +1,18 @@
+import esphome.codegen as cg
+import esphome.config_validation as cv
+from esphome.const import CONF_ID
+from esphome.components import uart
+
+DEPENDENCIES = ['uart']
+
+arv_analyzer_ns = cg.esphome_ns.namespace('arv_analyzer')
+ArvAnalyzer = arv_analyzer_ns.class_('ArvAnalyzer', cg.Component, uart.UARTDevice)
+
+CONFIG_SCHEMA = cv.Schema({
+    cv.GenerateID(): cv.declare_id(ArvAnalyzer),
+}).extend(cv.COMPONENT_SCHEMA).extend(uart.UART_DEVICE_SCHEMA)
+
+async def to_code(config):
+    var = cg.new_Pvariable(config[CONF_ID])
+    await cg.register_component(var, config)
+    await uart.register_uart_device(var, config)
