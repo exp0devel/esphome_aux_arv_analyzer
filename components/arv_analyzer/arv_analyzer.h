@@ -1,5 +1,6 @@
 #include "esphome.h"
 #include "esphome/components/uart/uart.h"
+
 class ArvAnalyzer : public Component, public uart::UARTDevice {
  public:
   ArvAnalyzer(uart::UARTComponent *parent) : uart::UARTDevice(parent) {}
